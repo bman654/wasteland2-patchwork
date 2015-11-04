@@ -1,0 +1,528 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Patchwork</name>
+    </assembly>
+    <members>
+        <member name="T:Patchwork.AssemblyPatcher">
+            <summary>
+                A class that patches a specific assembly (a target assembly) with your assemblies.
+            </summary>
+        </member>
+        <member name="M:Patchwork.AssemblyPatcher.CopyProperty(Mono.Cecil.PropertyDefinition,System.String)">
+            <summary>
+            Creates a new property like the specified property, but doesn't add it anywhere.
+            </summary>
+            <param name="yourProperty"></param>
+            <param name="newName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Patchwork.AssemblyPatcher.CreateNewProperty(Mono.Cecil.TypeDefinition,Mono.Cecil.PropertyDefinition,Patchwork.Attributes.NewMemberAttribute)">
+            <summary>
+                Creates a new property in the target assembly, but doesn't set its accessors.
+            </summary>
+            <param name="targetType">Type of the target.</param>
+            <param name="yourProperty">Your property.</param>
+            <param name="newPropAttr">The new property attribute.</param>
+            <exception cref="T:Patchwork.PatchDeclerationException">Thrown if this member collides with another member, and the error cannot be resolved.</exception>
+        </member>
+        <member name="M:Patchwork.AssemblyPatcher.CopyEvent(Mono.Cecil.EventDefinition,System.String)">
+            <summary>
+            Creates an event like the specified event, but doesn't add it anywhere.
+            </summary>
+            <param name="yourEvent"></param>
+            <param name="newName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Patchwork.AssemblyPatcher.CopyType(Mono.Cecil.TypeDefinition,System.String,System.String)">
+            <summary>
+            Creates a tpye like the specified type, but doesn't add it anywhere. However, its DeclaringType is set correctly.
+            </summary>
+            <param name="yourType"></param>
+            <param name="targetNamespace"></param>
+            <param name="targetName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Patchwork.AssemblyPatcher.CreateNewType(Mono.Cecil.TypeDefinition,Patchwork.Attributes.NewTypeAttribute)">
+            <summary>
+            Creates a new type in the target assembly, based on yourType.
+            </summary>
+            <param name="yourType">Your type, which describes what kind of type to create.</param>
+            <param name="actionAttribute">The action attribute ordering the creation.</param>
+            <returns></returns>
+            <exception cref="T:Patchwork.PatchDeclerationException">Thrown if this member collides with another member, and the error cannot be resolved.</exception>
+        </member>
+        <member name="M:Patchwork.AssemblyPatcher.CopyMethod(Mono.Cecil.MethodDefinition,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="yourMethod"></param>
+            <param name="targetName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Patchwork.AssemblyPatcher.CreateNewMethod(Patchwork.MemberAction{Mono.Cecil.MethodDefinition})">
+            <summary>
+            Creates a new method in the target assembly, for the specified type.
+            </summary>
+            <returns></returns>
+            <exception cref="T:Patchwork.PatchDeclerationException">Thrown if this member collides with another member, and the error cannot be resolved.</exception>
+        </member>
+        <member name="M:Patchwork.AssemblyPatcher.CreateNewField(Mono.Cecil.TypeDefinition,Mono.Cecil.FieldDefinition,Patchwork.Attributes.NewMemberAttribute)">
+            <summary>
+            Creates a new field in the target assembly, for the specified type.
+            </summary>
+            <param name="targetDeclaringType">The target declaring type.</param>
+            <param name="yourField">Your field.</param>
+            <param name="attr">The action attribute.</param>
+            <exception cref="T:Patchwork.PatchDeclerationException">Thrown if this member collides with another member, and the error cannot be resolved.</exception>
+            <returns></returns>
+        </member>
+        <member name="M:Patchwork.AssemblyPatcher.FixParamReference(Mono.Cecil.MethodDefinition,Mono.Cecil.ParameterReference)">
+            <summary>
+            Fixes a parameter reference 
+            </summary>
+            <param name="targetMethod"></param>
+            <param name="yourParamRef"></param>
+            <returns></returns>
+            
+        </member>
+        <member name="M:Patchwork.AssemblyPatcher.SimplifyOpCode(Mono.Cecil.Cil.OpCode)">
+            <summary>
+            
+            </summary>
+            <param name="toSimplify"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Patchwork.AssemblyPatcher.FixTypeReference(Mono.Cecil.TypeReference)">
+            <summary>
+                Fixes a type reference, possibly replacing a reference to a patching type from your assembly with a reference to
+                the type being patched.
+            </summary>
+            <param name="yourTypeRef">The type reference.</param>
+            <returns></returns>
+            <exception cref="T:System.NotSupportedException">
+                This method can only fix a reference to a patching type, or a reference to a
+                nested type in a patching type.
+            </exception>
+        </member>
+        <member name="M:Patchwork.AssemblyPatcher.ManualImportMethod(Mono.Cecil.MethodReference)">
+            <summary>
+            This performs a more diligent Import-like operation. The standard Import method can sometimes fail unpredictably when generics are involved.
+            Note that it's possible yourMethodRef will be mutated, so don't use it.
+            </summary>
+            <param name="yourMethodRef">A reference to your method.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Patchwork.AssemblyPatcher.FixMethodReference(Mono.Cecil.MethodReference,System.Boolean)">
+            <summary>
+                Fixes the method reference.
+            </summary>
+            <param name="yourMethodRef">The method reference.</param>
+            <param name="isntFixTypeCall">This parameter is sort of a hack that lets FixType call FixMethod to fix MVars, without infinite recursion. If set to false, it avoids fixing some types.</param>
+            <returns></returns>
+            <exception cref="T:System.Exception">Method isn't part of a patching type in this assembly...</exception>
+        </member>
+        <member name="M:Patchwork.AssemblyPatcher.CopyCustomAttributes(Mono.Cecil.ICustomAttributeProvider,Mono.Cecil.ICustomAttributeProvider,System.Func{Mono.Cecil.CustomAttribute,System.Boolean})">
+            <summary>
+            Copies the custom attributes, excluding any attributes from a patching assembly that haven't been declared
+            and Patchwork attributes. Note that this can only be used after all types and methods have been declared.
+            </summary>
+            <param name="targetMember">The target member.</param>
+            <param name="yourMember">Your member, the source of the attributes.</param>
+            <param name="filter"></param>
+        </member>
+        <member name="M:Patchwork.AssemblyPatcher.TransferMethodBody(Mono.Cecil.MethodDefinition,Mono.Cecil.MethodDefinition)">
+            <summary>
+            Transfers the method body of yourMethod into the targetMethod, keeping everything neat and tidy, creating new copies of yourMethod's instructions.
+            </summary>
+            <param name="targetMethod">The target method.</param>
+            <param name="yourMethod">Your instructions.</param>
+        </member>
+        <member name="M:Patchwork.AssemblyPatcher.#ctor(Mono.Cecil.AssemblyDefinition,Serilog.ILogger)">
+            <summary>
+                Initializes a new instance of the <see cref="T:Patchwork.AssemblyPatcher"/> class.
+            </summary>
+            <param name="targetAssembly">The target assembly being patched by this instance.</param>
+            <param name="log"></param>
+        </member>
+        <member name="M:Patchwork.AssemblyPatcher.PatchAssembly(System.String,System.Boolean)">
+            <summary>
+            Patches the current assembly with the assembly in the specified path.
+            </summary>
+            <param name="path"></param>
+            <param name="readSymbols"></param>
+        </member>
+        <member name="M:Patchwork.AssemblyPatcher.PatchManifest(Patchwork.PatchingManifest)">
+            <summary>
+            Applies the patch described in the given PatchingManifest to the TargetAssembly.
+            </summary>
+            <param name="manifest">The PatchingManifest. Note that the instance will be populated with additional information (such as newly created types) during execution.</param>
+        </member>
+        <member name="M:Patchwork.AssemblyPatcher.RunPeVerify(System.String,System.Collections.Generic.IEnumerable{System.Int64})">
+             <summary>
+             This method runs the PEVerify command-line tool on the patched assembly. It does this by first writing it to a temporary file.<br/>
+            PEVerify is a tool that verifies IL. It goes over it and looks for various issues.<br/>
+            Some of the errors it reports are relatively harmless but others mean the assembly cannot be loaded.<br/>
+            Ideally, it should report no errors.<br/>
+            This operation returns an extended and user-friendly form of the output, translating metadata tokens into user-readable names.
+             </summary>
+             <param name="switches">Command line switches supplied to PEVerify. </param>
+             <param name="ignoreErrors">A list of error numbers to ignore. Errors usually appear in hexadecimal format.</param>
+             <returns></returns>
+        </member>
+        <member name="P:Patchwork.AssemblyPatcher.EmbedHistory">
+            <summary>
+            Specifies whether to embed history, which includes special patching history attributes, as well as most patching attributes. If enabled, creates a dependency on Patchwork.Attributes.
+            </summary>
+        </member>
+        <member name="P:Patchwork.AssemblyPatcher.UseBackup">
+            <summary>
+            Whether or not to backup the TargetAssembly before applying a patch. Set to false for faster execution.
+            </summary>
+        </member>
+        <member name="P:Patchwork.AssemblyPatcher.TargetAssembly">
+            <summary>
+                Exposes the target assembly being patched by this instance.
+            </summary>
+            <value>
+                The target assembly.
+            </value>
+        </member>
+        <member name="P:Patchwork.AssemblyPatcher.Log">
+            <summary>
+                Gets the log.
+            </summary>
+            <value>
+                The log.
+            </value>
+        </member>
+        <member name="T:Patchwork.ImplicitImportSetting">
+            <summary>
+                Changes how members without explicit patch attributes are treated.
+            </summary>
+        </member>
+        <member name="F:Patchwork.ImplicitImportSetting.NoImplicit">
+            <summary>
+                All new elements must be explicitly declared or an error is thrown.
+            </summary>
+        </member>
+        <member name="F:Patchwork.ImplicitImportSetting.OnlyCompilerGenerated">
+            <summary>
+                Only compiler-generated elements will be implicitly imported/created.
+            </summary>
+        </member>
+        <member name="F:Patchwork.ImplicitImportSetting.ImplicitByDefault">
+            <summary>
+                (Not recommended) All elements that don't have a Patchwork ActionAttributes will be imported by default.
+            </summary>
+        </member>
+        <member name="P:Patchwork.ManifestCreator.ImplicitImports">
+            <summary>
+                Gets or sets the implicit imports setting. This influences how members that don't have any Patch attributes are
+                treated.
+            </summary>
+            <value>
+                The implicit import setting.
+            </value>
+        </member>
+        <member name="P:Patchwork.ManifestCreator.Filter">
+            <summary>
+                If set (default null), a filter that says which types to include. This is a debug option.
+            </summary>
+            <value>
+                The filter.
+            </value>
+        </member>
+        <member name="T:Patchwork.MemberAction`1">
+            <summary>
+            This used to be an anonymous type, but later I realized I use it often enough that it needs a name.
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="T:Patchwork.Collections.SimpleTypeLookup`1">
+            <summary>
+            This is kind of similar to an ILookup, with types as keys.
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="T:Patchwork.PatchDeclerationException">
+            <summary>
+            One of the declerations in the patching assembly is invalid in the context of the target assembly.
+            </summary>
+        </member>
+        <member name="T:Patchwork.PatchException">
+            <summary>
+            Base class for all Patchwork-specific exceptions the library throws.
+            </summary>
+        </member>
+        <member name="T:Patchwork.PatchImportException">
+            <summary>
+            A reference to a member or other element could not be imported (corrected and injected into the target assembly).
+            </summary>
+        </member>
+        <member name="T:Patchwork.PatchInternalException">
+            <summary>
+            Indicates an internal error in the program.
+            </summary>
+        </member>
+        <member name="T:Patchwork.Utility.Accessibility">
+            <summary>
+                A member's accessibility level, such as public, private, etc.
+            </summary>
+        </member>
+        <member name="T:Patchwork.Utility.CommonBindingFlags">
+            <summary>
+                Commonly used combinations of the BindingFlags enum.
+            </summary>
+        </member>
+        <member name="F:Patchwork.Utility.CommonBindingFlags.Everything">
+            <summary>
+                Instance, Static, Public, NonPublic
+            </summary>
+        </member>
+        <member name="T:Patchwork.Utility.PathHelper">
+            <summary>
+            Just a few helper methods for strings. Nothing to see here.
+            </summary>
+        </member>
+        <member name="T:Patchwork.Utility.CecilHelper">
+            <summary>
+                Helper methods (mainly extension methods) for working with Cecil and .NET reflection classes. Some are publically visible.
+            </summary>
+        </member>
+        <member name="M:Patchwork.Utility.CecilHelper.MakeOpenAssembly(Mono.Cecil.AssemblyDefinition,System.Boolean)">
+            <summary>
+                Makes an assembly 'open', whic7h means that everything is public and nothing is sealed. Ideal for writing a patching
+                assembly.
+            </summary>
+            <param name="assembly">The assembly.</param>
+            <param name="modifyEvents">if set to <c>true</c> [modify events].</param>
+        </member>
+        <member name="M:Patchwork.Utility.CecilHelper.LoadIntoMemory(Mono.Cecil.AssemblyDefinition,System.Boolean)">
+            <summary>
+                Loads a copy of the assembly from memory.
+            </summary>
+            <param name="def">The definition.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Patchwork.Utility.CecilHelper.LoadType(Mono.Cecil.TypeDefinition)">
+            <summary>
+            Loads a type using its Cecil definition. Involves loading the assembly from disk.
+            </summary>
+            <param name="typeDef">The type definition.</param>
+            <returns></returns>
+            <exception cref="T:System.TypeLoadException">Could not find the type from its Mono.Cecil identifiers, or could not load the
+            assembly.</exception>
+        </member>
+        <member name="M:Patchwork.Utility.CecilHelper.LoadProperty(Mono.Cecil.PropertyDefinition)">
+            <summary>
+                Loads the property from its Cecil metadata. Involves loading the assembly from disk.
+            </summary>
+            <param name="propDef">The property definition.</param>
+            <returns></returns>
+            <exception cref="T:System.MissingMemberException">Could not find the property.</exception>
+        </member>
+        <member name="M:Patchwork.Utility.CecilHelper.LoadMember(Mono.Cecil.IMemberDefinition)">
+            <summary>
+                Loads the member from its IMemberDefinition.
+            </summary>
+            <param name="memberDef">The member definition.</param>
+            <returns></returns>
+            <exception cref="T:System.NotSupportedException">Unknown IMemberDefinition type.</exception>
+        </member>
+        <member name="M:Patchwork.Utility.CecilHelper.GetField(Mono.Cecil.TypeDefinition,System.String)">
+            <summary>
+                Gets the field.
+            </summary>
+            <param name="typeDef">The type definition.</param>
+            <param name="name">The name.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Patchwork.Utility.CecilHelper.GetEvent(Mono.Cecil.TypeDefinition,System.String)">
+            <summary>
+            Returns the event with the specified name, or null.
+            </summary>
+            <param name="typeDef"></param>
+            <param name="name"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Patchwork.Utility.CecilHelper.GetProperties(Mono.Cecil.TypeDefinition,System.String,System.Collections.Generic.IEnumerable{Mono.Cecil.TypeReference})">
+            <summary>
+                Gets the property.
+            </summary>
+            <param name="typeDef">The type definition.</param>
+            <param name="name">The name.</param>
+            <param name="types"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Patchwork.Utility.CecilHelper.GetProperty(Mono.Cecil.TypeDefinition,System.String,System.Collections.Generic.IEnumerable{Mono.Cecil.TypeReference})">
+            <summary>
+                Gets the property.
+            </summary>
+            <param name="typeDef">The type definition.</param>
+            <param name="name">The name.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Patchwork.Utility.CecilHelper.MakeReference(Mono.Cecil.MethodReference)">
+            <summary>
+                Returns a MethodReference to the method. Note that the DeclaringType, ReturnType, etc, aren't fixed.
+            </summary>
+            <param name="methodDef">The method definition.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Patchwork.Utility.CecilHelper.MakeReference(Mono.Cecil.FieldReference)">
+            <summary>
+                Returns a MethodReference to the method. Note that the DeclaringType, ReturnType, etc, aren't fixed.
+            </summary>
+            <param name="methodDef">The method definition.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Patchwork.Utility.CecilHelper.HasCustomAttribute``1(Mono.Cecil.ICustomAttributeProvider)">
+            <summary>
+                Determines whether the custom attribute provider has the right custom attribute.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="memberDef">The member definition.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Patchwork.Utility.CecilHelper.GetNestedType(Mono.Cecil.TypeReference,System.String)">
+            <summary>
+                Finds a nested type with the specified local name in the given type. It only works for immediate descendants.
+            </summary>
+            <param name="typeDef">The type definition.</param>
+            <param name="name">The name.</param>
+            <returns></returns>
+            <exception cref="T:System.Reflection.AmbiguousMatchException">More than one nested type matched the search criteria.</exception>
+            <exception cref="T:System.MissingMemberException">Could not find a nested type with that name.</exception>
+        </member>
+        <member name="M:Patchwork.Utility.CecilHelper.LoadLocalAssembly(Mono.Cecil.AssemblyDefinition)">
+            <summary>
+                Tries to load the assembly from disk by using its Cecil identifiers. Can fail, so don't use it often.
+            </summary>
+            <param name="assemblyDef">The assembly definition.</param>
+            <returns></returns>
+            <exception cref="T:System.TypeLoadException">Could not load the assembly from its Mono.Cecil definition.</exception>
+        </member>
+        <member name="M:Patchwork.Utility.CecilHelper.LoadMethod(Mono.Cecil.MethodDefinition)">
+            <summary>
+                Converts a Cecil.MethodDefinition to a MethodBase. Also converts constructors. Requires loading the type and/or
+                assembly.
+            </summary>
+            <param name="methodDef">The method definition.</param>
+            <returns></returns>
+            <exception cref="T:System.MissingMemberException">No member matched the search criteria.</exception>
+            <exception cref="T:System.TypeLoadException">Could not load the type or assembly.</exception>
+            <exception cref="T:System.Reflection.AmbiguousMatchException">More than one member matched the search criteria.</exception>
+        </member>
+        <member name="M:Patchwork.Utility.CecilHelper.LoadField(Mono.Cecil.FieldDefinition)">
+            <summary>
+                Loads a Cecil.FieldDefinition as a System.FieldInfo. Requires loading the assembly.
+            </summary>
+            <param name="fieldDef">The field definition.</param>
+            <returns></returns>
+            <exception cref="T:System.MissingMemberException">Could not find the field.</exception>
+        </member>
+        <member name="M:Patchwork.Utility.CecilHelper.GetAccessbility(Mono.Cecil.IMemberDefinition)">
+            <summary>
+                Gets the C#-like accessbility of this member.
+            </summary>
+            <param name="memberDef">The member definition.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Patchwork.Utility.CecilHelper.SetAccessibility(Mono.Cecil.IMemberDefinition,Patchwork.Utility.Accessibility)">
+            <summary>
+                Sets the accessibility attributes of this member to the desired C#-like accessibility.
+            </summary>
+            <param name="method">The method.</param>
+            <param name="newAccessibility">The new accessibility.</param>
+        </member>
+        <member name="M:Patchwork.Utility.CecilHelper.IsPatchingAssembly(Mono.Cecil.AssemblyDefinition)">
+            <summary>
+                Determines whether this is a patching assembly. Normally, if it has PatchingAssemblyAttribute.
+            </summary>
+            <param name="assembly">The assembly.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Patchwork.Utility.CecilHelper.GetCustomAttributes``1(Mono.Cecil.ICustomAttributeProvider)">
+            <summary>
+                Gets the custom attributes. However, it can fail in some cases, so use it with care.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="provider">The provider.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Patchwork.Utility.CecilHelper.GetCustomAttribute``1(Mono.Cecil.ICustomAttributeProvider)">
+            <summary>
+                Gets the custom attribute.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="provider">The provider.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Patchwork.Utility.CecilHelper.GetPatchedTypeFullName(Mono.Cecil.TypeReference)">
+            <summary>
+                If given a ref to a patching type, returns the type that it patches. Otherwise, returns null.
+            </summary>
+            <param name="typeRef">The type reference.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Patchwork.Utility.CecilHelper.IsCompilerGenerated(Mono.Cecil.IMemberDefinition)">
+            <summary>
+                Determines whether the member was compiler generated.
+            </summary>
+            <param name="attrProvider">The attribute provider.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Patchwork.Utility.CecilHelper.UserFriendlyName(Mono.Cecil.MemberReference)">
+            <summary>
+                Returns a user-friendly name for the reference.
+                It's not as short as Name, but not as long as FullName.
+            </summary>
+            <param name="memberRef">The member reference.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Patchwork.Utility.CecilHelper.LookupTokenExtended(Mono.Cecil.ModuleDefinition,Mono.Cecil.MetadataToken)">
+            <summary>
+            This method returns the member with the specified metadata token in the given module. It supports more TokenTypes than the standard Cecil method.
+            </summary>
+            <param name="module"></param>
+            <param name="token"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Patchwork.Utility.CecilHelper.GetMethods(Mono.Cecil.TypeDefinition,System.String,System.Collections.Generic.IEnumerable{Mono.Cecil.TypeReference},System.Int32,Mono.Cecil.TypeReference)">
+            <summary>
+            This method only considers the return type of the method if its name is op_Explicit or op_Implicit.
+            </summary>
+            <param name="type"></param>
+            <param name="methodName"></param>
+            <param name="similarParams"></param>
+            <param name="genericArity"></param>
+            <param name="returnType"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Patchwork.Utility.CecilHelper.AreTypesEquivForOverloading(Mono.Cecil.TypeReference,Mono.Cecil.TypeReference)">
+            <summary>
+                Determines if the types are equivalent for the purpose of choosing overloads.
+            </summary>
+            <param name="a">Type a.</param>
+            <param name="b">Type b.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Patchwork.Utility.CecilHelper.UserFriendlyName(Mono.Cecil.TypeReference,System.Boolean)">
+            <summary>
+                Returns a user-friendly name.
+            </summary>
+            <param name="typeRef">The type reference.</param>
+            <param name="longForm">If true, returns a longer form of the name.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Patchwork.Utility.CecilHelper.TryConstructAttribute(Mono.Cecil.CustomAttribute)">
+            <summary>
+                Constructs an attribute instance from its metadata.
+                The method will fail if the attribute constructor has a System.Type parameter.
+            </summary>
+            <param name="customAttrData">The custom attribute data.</param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>
