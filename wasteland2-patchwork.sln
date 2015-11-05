@@ -11,6 +11,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MakePublicAssemblies", "MakePublicAssemblies\MakePublicAssemblies.csproj", "{72005099-75E0-4CFA-8407-BA7A31ED5988}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApplyPatch", "ApplyPatch\ApplyPatch.csproj", "{292B5BF3-E306-4C77-A787-4889BB76EA0E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "W2PWMod", "W2PWMod\W2PWMod.csproj", "{52F760E6-D45C-4C02-8B11-C6A3B731F97D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +25,14 @@ Global
 		{72005099-75E0-4CFA-8407-BA7A31ED5988}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{72005099-75E0-4CFA-8407-BA7A31ED5988}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{72005099-75E0-4CFA-8407-BA7A31ED5988}.Release|Any CPU.Build.0 = Release|Any CPU
+		{292B5BF3-E306-4C77-A787-4889BB76EA0E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{292B5BF3-E306-4C77-A787-4889BB76EA0E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{292B5BF3-E306-4C77-A787-4889BB76EA0E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{292B5BF3-E306-4C77-A787-4889BB76EA0E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{52F760E6-D45C-4C02-8B11-C6A3B731F97D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{52F760E6-D45C-4C02-8B11-C6A3B731F97D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{52F760E6-D45C-4C02-8B11-C6A3B731F97D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{52F760E6-D45C-4C02-8B11-C6A3B731F97D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

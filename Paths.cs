@@ -15,14 +15,18 @@ namespace W2PW
         public const string PublicAssemblyWorkingFolder = @"D:\Documents\wasteland2-files\public";
 
         /// <summary>
+        /// I'm using the timestamp of Build\WL2.exe as the game version
+        /// </summary>
+        public const string GameVersion = "20151104-1857-win";
+        /// <summary>
         /// Folder where the original game assemblies have been copied.  When patching, these will be the files read in, patched, and written to the PatchedAssemblyFolder
         /// </summary>
-        public const string OriginalAssemblyFolder = @"D:\Documents\wasteland2-files\5.2.1.32620-win";
+        public const string OriginalAssemblyFolder = @"D:\Documents\wasteland2-files\" + GameVersion;
 
         /// <summary>
         /// This is where the patch program will write the patched assemblies
         /// </summary>
-        public const string PatchedAssemblyFolder = @"D:\Documents\wasteland2-files\patched\5.2.1.32620-win";
+        public const string PatchedAssemblyFolder = @"D:\Documents\wasteland2-files\patched\" + GameVersion;
         
         /// <summary>
         /// Path to the Managed folder of the W2 installation
@@ -54,6 +58,7 @@ namespace W2PW
         public static string PatchedAssembly
         {
             get { return Path.Combine(PatchedAssemblyFolder, "Assembly-CSharp.dll"); }
+            //get { return Path.Combine(W2ManagedFolder, "Assembly-CSharp.dll"); }
         }
     }
 }
