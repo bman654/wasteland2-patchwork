@@ -6,7 +6,19 @@ using UnityEngine;
 namespace W2PWMod.Mods.FreeCamera
 {
     [ModifiesType]
-    public class mod_FreeCamera : InXileSplineInterpolator
+    public class mod_Drama : Drama
+    {
+        [ModifiesMember("DoCameraFocus")]
+        public void DoCameraFocusNew(Vector3 targetPosition)
+        {
+            // ensure we zoom no closer than the original game's minimum zoom
+            Helper.W2ModDebug.Log("Adjusting conv. zoom");
+            this.Action_FocusCamera(targetPosition, Mathf.Min(0.7f, this.cameraZoom), Camera.main.transform.forward, this.cameraSpeedOverride, this.cameraSnapInstant, 1f);
+        }
+    }
+
+    [ModifiesType]
+    public class mod_InXileSplineInterpolator: InXileSplineInterpolator
     {
         [NewMember]
         [DuplicatesBody("GetSplineNodes")]
