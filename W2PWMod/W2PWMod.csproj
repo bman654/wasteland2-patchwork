@@ -34,6 +34,9 @@
     <Reference Include="Assembly-CSharp">
       <HintPath>..\..\wasteland2-files\public\Assembly-CSharp.dll</HintPath>
     </Reference>
+    <Reference Include="Assembly-CSharp-firstpass">
+      <HintPath>..\..\wasteland2-files\20151104-1857-win\Assembly-CSharp-firstpass.dll</HintPath>
+    </Reference>
     <Reference Include="Patchwork.Attributes">
       <HintPath>..\lib\Patchwork.Attributes.dll</HintPath>
     </Reference>
@@ -46,7 +49,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Helper\W2ModDebug.cs" />
-    <Compile Include="Mods\FreeCamera\mod_FreeCamera.cs" />
+    <Compile Include="Mods\FreeCombatCamera.cs" />
+    <Compile Include="Mods\FreeCamera.cs" />
     <Compile Include="ModType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
