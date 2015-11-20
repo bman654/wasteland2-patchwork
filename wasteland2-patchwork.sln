@@ -1,12 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{EDDFCF05-016B-438B-A7BA-2885E09CFFDB}"
 	ProjectSection(SolutionItems) = preProject
 		LogFactory.cs = LogFactory.cs
 		Paths.cs = Paths.cs
+		W2PWModDefaults.ini = W2PWModDefaults.ini
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MakePublicAssemblies", "MakePublicAssemblies\MakePublicAssemblies.csproj", "{72005099-75E0-4CFA-8407-BA7A31ED5988}"

@@ -17,7 +17,7 @@ namespace W2PW
         /// <summary>
         /// I'm using the timestamp of Build\WL2.exe as the game version
         /// </summary>
-        public const string GameVersion = "20151104-1857-win";
+        public const string GameVersion = "20151113-1051-win";
         /// <summary>
         /// Folder where the original game assemblies have been copied.  When patching, these will be the files read in, patched, and written to the PatchedAssemblyFolder
         /// </summary>
