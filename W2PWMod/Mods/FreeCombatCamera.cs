@@ -7,9 +7,10 @@ using Random=UnityEngine.Random;
 
 namespace W2PWMod.Mods.FreeCombatCamera
 {
-    public class mod_Option
+    [NewType]
+    public static class FreeCombatCameraOptions
     {
-        public static bool Enabled { get; set; }
+        public static bool Enabled => W2PWMod.Options.GetBool("Free Combat Camera Enabled");
     }
 
     [ModifiesType]
@@ -31,7 +32,7 @@ namespace W2PWMod.Mods.FreeCombatCamera
         [ModifiesMember("Activate")]
         public void ActivateNew()
         {
-            if (mod_Option.Enabled)
+            if (FreeCombatCameraOptions.Enabled)
             {
                 BaseActivate();
             }
@@ -52,7 +53,7 @@ namespace W2PWMod.Mods.FreeCombatCamera
         [ModifiesMember("IsComplete")]
         public bool IsCompleteNew()
         {
-            return mod_Option.Enabled || IsCompleteOld();
+            return FreeCombatCameraOptions.Enabled || IsCompleteOld();
         }
     }
 
@@ -75,7 +76,7 @@ namespace W2PWMod.Mods.FreeCombatCamera
         [ModifiesMember("Activate")]
         public void ActivateNew()
         {
-            if (mod_Option.Enabled)
+            if (FreeCombatCameraOptions.Enabled)
             {
                 BaseActivate();
             }
@@ -96,7 +97,7 @@ namespace W2PWMod.Mods.FreeCombatCamera
         [ModifiesMember("IsComplete")]
         public bool IsCompleteNew()
         {
-            return mod_Option.Enabled || IsCompleteOld();
+            return FreeCombatCameraOptions.Enabled || IsCompleteOld();
         }
     }
 
@@ -131,7 +132,7 @@ namespace W2PWMod.Mods.FreeCombatCamera
             }
             InputManager instance = MonoBehaviourSingleton<InputManager>.GetInstance(false);
             CombatManager instance2 = MonoBehaviourSingleton<CombatManager>.GetInstance(false);
-            if ((this.followingMob || this.followingObject) && (instance.cameraMove.x != 0f || instance.cameraMove.y != 0f) && (mod_Option.Enabled || !instance2.inCombat || instance2.isPlayersTurn)) // MODIFIED
+            if ((this.followingMob || this.followingObject) && (instance.cameraMove.x != 0f || instance.cameraMove.y != 0f) && (FreeCombatCameraOptions.Enabled || !instance2.inCombat || instance2.isPlayersTurn)) // MODIFIED
             {
                 this.followingMob = false;
                 this.followingObject = false;
@@ -306,7 +307,7 @@ namespace W2PWMod.Mods.FreeCombatCamera
                                         }
                                         else
                                         {
-                                            if (/*!instance2.inCombat || instance2.isPlayersTurn*/true) // MODIFIED
+                                            if (!instance2.inCombat || instance2.isPlayersTurn || FreeCombatCameraOptions.Enabled) // MODIFIED
                                             {
                                                 if (!this.snapping && (instance.cameraMove.x != 0f || instance.cameraMove.y != 0f))
                                                 {
@@ -497,7 +498,7 @@ namespace W2PWMod.Mods.FreeCombatCamera
         {
             // suppress calls to Follow a mob while executing this function.
             // we could have modified the function, but this way is more future proof
-            if (mod_Option.Enabled)
+            if (FreeCombatCameraOptions.Enabled)
             {
                 ((mod_CameraControllerSpline) MonoBehaviourSingleton<Game>.GetInstance(false).cameraController)
                     .IgnoreFollowMob = true;
@@ -505,7 +506,7 @@ namespace W2PWMod.Mods.FreeCombatCamera
 
             var result = MoveTowardsTargetOld(target, meleeGetCloser, positionMap);
 
-            if (mod_Option.Enabled)
+            if (FreeCombatCameraOptions.Enabled)
             {
                 ((mod_CameraControllerSpline) MonoBehaviourSingleton<Game>.GetInstance(false).cameraController)
                     .IgnoreFollowMob = false;
@@ -527,7 +528,7 @@ namespace W2PWMod.Mods.FreeCombatCamera
         {
             // suppress calls to Follow a mob while executing this function.
             // we could have modified the function, but this way is more future proof
-            if (mod_Option.Enabled)
+            if (FreeCombatCameraOptions.Enabled)
             {
                 ((mod_CameraControllerSpline)MonoBehaviourSingleton<Game>.GetInstance(false).cameraController)
                     .IgnoreFollowMob = true;
@@ -535,7 +536,7 @@ namespace W2PWMod.Mods.FreeCombatCamera
 
             MoveOnPathOld(path, pathCost);
 
-            if (mod_Option.Enabled)
+            if (FreeCombatCameraOptions.Enabled)
             {
                 ((mod_CameraControllerSpline)MonoBehaviourSingleton<Game>.GetInstance(false).cameraController)
                     .IgnoreFollowMob = false;
@@ -1016,7 +1017,7 @@ namespace W2PWMod.Mods.FreeCombatCamera
                                         MonoBehaviourSingleton<EventManager>.GetInstance(false).Publish(eventInfo_CommandMove, false);
                                         MonoBehaviourSingleton<CombatAStar>.GetInstance(false).ClearPath();
                                         MonoBehaviourSingleton<CursorManager>.GetInstance(false).ClearCoverCursor();
-                                        if (!mod_Option.Enabled) // MODIFIED - ADDED THIS IF STATEMENT TO PREVENT NEXT LINE
+                                        if (!FreeCombatCameraOptions.Enabled) // MODIFIED - ADDED THIS IF STATEMENT TO PREVENT NEXT LINE
                                             MonoBehaviourSingleton<Game>.GetInstance(false).cameraController.FollowPC(this.activePCs[0]);
                                         this.lastCombatSquare = null;
                                         this.timerCombatSquare = null;

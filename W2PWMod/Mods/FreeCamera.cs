@@ -5,6 +5,13 @@ using UnityEngine;
 
 namespace W2PWMod.Mods.FreeCamera
 {
+    [NewType]
+    public static class FreeCameraOptions
+    {
+        public static bool FarEnabled => W2PWMod.Options.GetBool("Free Camera Zoomed Out Angle Enabled");
+        public static bool NearEnabled => W2PWMod.Options.GetBool("Free Camera Zoomed In Angle Enabled");
+    }
+
     [ModifiesType]
     public class mod_Drama : Drama
     {
@@ -12,8 +19,8 @@ namespace W2PWMod.Mods.FreeCamera
         public void DoCameraFocusNew(Vector3 targetPosition)
         {
             // ensure we zoom no closer than the original game's minimum zoom
-            Helper.W2ModDebug.Log("Adjusting conv. zoom");
-            this.Action_FocusCamera(targetPosition, Mathf.Min(0.7f, this.cameraZoom), Camera.main.transform.forward, this.cameraSpeedOverride, this.cameraSnapInstant, 1f);
+            var maxZoom = FreeCameraOptions.NearEnabled ? 0.7f : 1f;
+            this.Action_FocusCamera(targetPosition, Mathf.Min(maxZoom, this.cameraZoom), Camera.main.transform.forward, this.cameraSpeedOverride, this.cameraSnapInstant, 1f);
         }
     }
 
@@ -31,6 +38,11 @@ namespace W2PWMod.Mods.FreeCamera
         public CameraSplineNode[] GetSplineNodesNew()
         {
             var result = GetSplineNodesOriginal();
+
+            if (!FreeCameraOptions.FarEnabled && !FreeCameraOptions.NearEnabled)
+            {
+                return result;
+            }
 
 #if false
             for (var i = 0; i < result.Length; ++i)
@@ -61,10 +73,27 @@ namespace W2PWMod.Mods.FreeCamera
 
                 result = newResult;
 
-                result[0].transform.localRotation = Quaternion.Euler(10.0f, 0.0f, 0.0f); // original: (36.0, 0.0, 0.0)
+                if (FreeCameraOptions.NearEnabled)
+                {
+                    result[0].transform.localRotation = Quaternion.Euler(10.0f, 0.0f, 0.0f);
+                }
+                else
+                {
+                    result[0].transform.localRotation = Quaternion.Euler(36.0f, 0.0f, 0.0f);
+                }
+
                 result[1].transform.localRotation = Quaternion.Euler(36.0f, 0.0f, 0.0f);
-                result[2].transform.localRotation = Quaternion.Euler(46.0f, 0.0f, 0.0f); // original: (53.0, 0.0, 0.0)
-                result[3].transform.localRotation = Quaternion.Euler(53.0f, 0.0f, 0.0f); // original: (67.0, 0.0, 0.0)
+
+                if (FreeCameraOptions.FarEnabled)
+                {
+                    result[2].transform.localRotation = Quaternion.Euler(46.0f, 0.0f, 0.0f); // original: (53.0, 0.0, 0.0)
+                    result[3].transform.localRotation = Quaternion.Euler(53.0f, 0.0f, 0.0f); // original: (67.0, 0.0, 0.0)
+                }
+                else
+                {
+                    result[2].transform.localRotation = Quaternion.Euler(53.0f, 0.0f, 0.0f); // original: (53.0, 0.0, 0.0)
+                    result[3].transform.localRotation = Quaternion.Euler(67.0f, 0.0f, 0.0f); // original: (67.0, 0.0, 0.0)
+                }
 
                 /* y is height above the ground
                  * y = 0 puts camera a few feet above the head
@@ -72,13 +101,30 @@ namespace W2PWMod.Mods.FreeCamera
                  * z is lateral distance away from target
                  * z = 0 puts camera a few feed behind the target
                  */
-                result[0].transform.localPosition = new Vector3(0f, -1.0f,   0.0f); // original: (0.0,  8.0, -10.0)
+
+                if (FreeCameraOptions.NearEnabled)
+                {
+                    result[0].transform.localPosition = new Vector3(0f, -1.0f, 0.0f); // original: (0.0,  8.0, -10.0)
+                }
+                else
+                {
+                    result[0].transform.localPosition = new Vector3(0f, 8.0f, -10.0f); // original: (0.0,  8.0, -10.0)
+                }
                 result[1].transform.localPosition = new Vector3(0f,  8.0f, -10.0f);
-                result[2].transform.localPosition = new Vector3(0f, 23.7f, -14.2f); // original: (0.0, 23.7, -14.2)
-                result[3].transform.localPosition = new Vector3(0f, 43.7f, -22.0f); // original: (0.0, 43.7, -14.2)
+
+                if (FreeCameraOptions.FarEnabled)
+                {
+                    result[2].transform.localPosition = new Vector3(0f, 23.7f, -14.2f); // original: (0.0, 23.7, -14.2)
+                    result[3].transform.localPosition = new Vector3(0f, 43.7f, -22.0f); // original: (0.0, 43.7, -14.2)
+                }
+                else
+                {
+                    result[2].transform.localPosition = new Vector3(0f, 23.7f, -14.2f); // original: (0.0, 23.7, -14.2)
+                    result[3].transform.localPosition = new Vector3(0f, 43.7f, -14.2f); // original: (0.0, 43.7, -14.2)
+                }
 
                 result[0].time = 0.00f;
-                result[1].time = 0.10f;
+                result[1].time = FreeCameraOptions.NearEnabled ? 0.10f : 0.01f;
                 result[2].time = 0.50f;
                 result[3].time = 1.00f;
 

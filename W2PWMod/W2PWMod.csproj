@@ -52,6 +52,7 @@
     <Compile Include="Mods\FreeCombatCamera.cs" />
     <Compile Include="Mods\FreeCamera.cs" />
     <Compile Include="ModType.cs" />
+    <Compile Include="Options.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />
