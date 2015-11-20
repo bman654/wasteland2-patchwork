@@ -32,7 +32,7 @@ namespace W2PWMod
             var folderUri = Assembly.GetExecutingAssembly().CodeBase;
             if (folderUri.StartsWith("file:///"))
             {
-                var folder = Path.GetFullPath(folderUri.Substring(8).Replace('/', '\\'));
+                var folder = Path.GetDirectoryName(Path.GetFullPath(folderUri.Substring(8).Replace('/', '\\')));
                 return Path.Combine(folder, file);
             }
 
@@ -53,10 +53,12 @@ namespace W2PWMod
                     var comment = line.IndexOf(';');
                     var trimmedLine = ((comment >= 0) ? line.Remove(comment) : line).Trim();
                     var parts = trimmedLine.Split(equals);
+
                     if (parts.Length == 2)
                     {
                         var name = parts[0].Trim();
                         var value = parts[1].Trim();
+                        Helper.W2ModDebug.Log("found ini setting '{0}'='{1}'", name, value);
                         if (name.Length > 0 && value.Length > 0)
                         {
                             values[name] = value;

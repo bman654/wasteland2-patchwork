@@ -75,14 +75,14 @@ namespace W2PWMod.Mods.FreeCamera
 
                 if (FreeCameraOptions.NearEnabled)
                 {
-                    result[0].transform.localRotation = Quaternion.Euler(10.0f, 0.0f, 0.0f);
+                    result[0].transform.localRotation = Quaternion.Euler(10.0f, 0.0f, 0.0f); // original: (36, 0, 0)
+                    result[1].transform.localRotation = Quaternion.Euler(36.0f, 0.0f, 0.0f);
                 }
                 else
                 {
                     result[0].transform.localRotation = Quaternion.Euler(36.0f, 0.0f, 0.0f);
+                    result[1].transform.localRotation = Quaternion.Euler(38.0f, 0.0f, 0.0f);
                 }
-
-                result[1].transform.localRotation = Quaternion.Euler(36.0f, 0.0f, 0.0f);
 
                 if (FreeCameraOptions.FarEnabled)
                 {
@@ -105,12 +105,13 @@ namespace W2PWMod.Mods.FreeCamera
                 if (FreeCameraOptions.NearEnabled)
                 {
                     result[0].transform.localPosition = new Vector3(0f, -1.0f, 0.0f); // original: (0.0,  8.0, -10.0)
+                    result[1].transform.localPosition = new Vector3(0f, 8.0f, -10.0f);
                 }
                 else
                 {
                     result[0].transform.localPosition = new Vector3(0f, 8.0f, -10.0f); // original: (0.0,  8.0, -10.0)
+                    result[1].transform.localPosition = new Vector3(0f, 11.0f, -11.0f);
                 }
-                result[1].transform.localPosition = new Vector3(0f,  8.0f, -10.0f);
 
                 if (FreeCameraOptions.FarEnabled)
                 {
@@ -124,7 +125,7 @@ namespace W2PWMod.Mods.FreeCamera
                 }
 
                 result[0].time = 0.00f;
-                result[1].time = FreeCameraOptions.NearEnabled ? 0.10f : 0.01f;
+                result[1].time = 0.10f;
                 result[2].time = 0.50f;
                 result[3].time = 1.00f;
 
